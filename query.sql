@@ -56,3 +56,36 @@ from
   bookings b
   inner join users u on b.user_id = u.user_id
   inner join matches m on b.match_id = m.match_id;
+
+-- ============================================================
+--  QUERY 5
+--  All users and their booking IDs — fans with NO bookings
+--  must still appear (NULL booking_id).
+--  Concept: LEFT JOIN keeps every row from the left table (users)
+-- ============================================================
+select u.user_id,u.full_name,b.booking_id
+from users u
+left join bookings b on u.user_id = b.user_id
+order by u.user_id;
+
+-- ============================================================
+--  QUERY 6
+--  Bookings whose total_cost is strictly above the overall average
+--  Concept: scalar subquery inside WHERE
+-- ============================================================
+select booking_id, match_id, total_cost
+from bookings
+where total_cost > (select avg(total_cost) from bookings);
+
+-- ============================================================
+--  QUERY 7
+--  Top 2 most expensive matches, skipping the absolute highest
+--  Concept: ORDER BY + LIMIT + OFFSET
+--  OFFSET 1 skips the #1 row (Real Madrid vs Barcelona at 150)
+-- ============================================================
+select match_id,fixture,base_ticket_price
+from matches
+order by base_ticket_price desc
+limit 2 offset 1;
+
+
